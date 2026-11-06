@@ -1,0 +1,4 @@
+.tasks
+
+  .greeting
+    .cmd echo Hello world!

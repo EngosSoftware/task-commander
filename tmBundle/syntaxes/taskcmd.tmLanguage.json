@@ -1,0 +1,82 @@
+{
+  "name": "taskcmd",
+  "scopeName": "source.taskcmd",
+  "patterns": [
+    {
+      "name": "note.taskcmd",
+      "begin": "(^\\s*\\.)(note)(?=\\s|$)",
+      "end": "(?=^\\s*\\.)",
+      "beginCaptures": {
+        "2": {
+          "name": "comment.line.taskcmd"
+        }
+      },
+      "contentName": "comment.line.taskcmd",
+      "patterns": [
+        {
+          "include": "#code-inline"
+        }
+      ]
+    },
+    {
+      "name": "description.taskcmd",
+      "begin": "(^\\s*\\.)(desc)(?=\\s|$)",
+      "end": "(?=^\\s*\\.)",
+      "beginCaptures": {
+        "2": {
+          "name": "keyword.taskcmd"
+        }
+      },
+      "contentName": "string.taskcmd",
+      "patterns": [
+        {
+          "include": "#code-inline"
+        }
+      ]
+    },
+    {
+      "name": "variable.taskcmd",
+      "match": "(^\\s*\\.)([A-Z_-]+)",
+      "captures": {
+        "2": {
+          "name": "constant.other.taskcmd"
+        }
+      }
+    },
+    {
+      "name": "node.taskcmd",
+      "match": "(^\\s*\\.)([^\\s]+)",
+      "captures": {
+        "2": {
+          "name": "keyword.taskcmd"
+        }
+      }
+    },
+    {
+      "name": "interpolation.taskcmd",
+      "match": "(\\{\\{[^\\}]*\\}\\})",
+      "captures": {
+        "1": {
+          "name": "constant.other.taskcmd"
+        }
+      }
+    }
+  ],
+  "repository": {
+    "code-inline": {
+      "name": "code.inline.taskcmd",
+      "match": "(`)([^`]*)(`)",
+      "captures": {
+        "1": {
+          "name": "punctuation.taskcmd"
+        },
+        "2": {
+          "name": "constant.numeric.taskcmd"
+        },
+        "3": {
+          "name": "punctuation.taskcmd"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.note Example of a single
+      command definition.
+
+.tasks
+
+  .run
+    .note This task runs a very sophisticated command.
+    .cmd true
+      .note This command always returns code 0,
+            it means "always successful".
+
+.note End of definitions.

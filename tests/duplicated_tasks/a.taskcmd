@@ -1,0 +1,7 @@
+.tasks
+
+  .build
+    .cmd cargo +stable build
+
+  .build
+    .cmd cargo +stable build

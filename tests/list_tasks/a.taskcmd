@@ -1,0 +1,83 @@
+.tasks
+
+  .build
+    .desc Builds in debug mode
+    .cmd cargo +stable build
+
+  .clean
+    .desc Cleans all targets
+    .cmd cargo +stable clean
+
+  .clippy
+    .desc Runs clippy for all targets
+    .cmd cargo +stable clippy --all-targets
+
+  .cov
+    .desc Generates code coverage report in text format
+    .cmd cargo +stable llvm-cov clean
+    .cmd cargo +stable llvm-cov --no-cfg-coverage
+
+  .cov-html
+    .desc Generates code coverage report in HTML format
+    .cmd cargo +stable llvm-cov clean
+    .cmd cargo +stable llvm-cov --no-cfg-coverage --html
+
+  .cov-html-open
+    .desc Generates code coverage report in HTML format
+    .cmd cargo +stable llvm-cov clean
+    .cmd cargo +stable llvm-cov --no-cfg-coverage --html --open
+
+  .cov-badge
+    .desc Generates the detailed code coverage badge
+    .cmd cargo +stable llvm-cov clean
+    .cmd cargo +stable llvm-cov --no-cfg-coverage --json --summary-only | coverio -l coverage -c --tag cov-badge
+
+  .doc
+    .desc Generates documentation
+    .cmd cargo +stable doc
+
+  .doc-private
+    .desc Generates documentation
+    .cmd cargo +stable doc --document-private-items
+
+  .doc-open
+    .desc Generates documentation and opens in browser
+    .cmd cargo +stable doc --open
+
+  .doc-private-open
+    .desc Generates documentation and opens in browser
+    .cmd cargo +stable doc --open --document-private-items
+
+  .fmt
+    .cmd cargo +nightly fmt
+
+  .install
+    .desc Builds and installs release version from local sources
+    .cmd cargo +stable install task-commander --path . --force
+
+  .manual
+    .desc Builds the manual from its markdown files
+    .cmd cd manual && mdbook build
+
+  .readme
+    .desc Recreates README file
+          Updates the README file taken from the documentation
+          and then recalculates and updates code coverage stats.
+    .cmd magg readme
+    .task cov-badge
+
+  .serve
+    .desc Serves the manual locally and rebuilds on changes
+    .cmd cd manual && mdbook serve
+
+  .test
+    .desc Runs tests in debug mode
+    .cmd cargo +stable test
+
+  .testn
+    .desc Runs tests in debug mode
+    .cmd cargo +stable nextest run
+
+  .uninstall
+    .desc Uninstalls previously installed local version
+    .cmd cargo +stable uninstall task-commander

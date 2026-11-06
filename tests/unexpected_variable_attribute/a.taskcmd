@@ -1,0 +1,8 @@
+.vars
+  .HELLO Hello!
+    .name John
+
+.tasks
+
+  .hello
+    .cmd echo {{HELLO}}

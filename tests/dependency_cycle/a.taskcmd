@@ -1,0 +1,13 @@
+.tasks
+
+  .parent
+    .task child
+
+  .child
+    .task aunt
+
+  .aunt
+    .task uncle
+
+  .uncle
+    .task child

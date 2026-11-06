@@ -1,0 +1,107 @@
+.note To use these task definitions, run:
+      `cargo install task-commander`
+
+.vars
+  .RUST_TOOLCHAIN +stable
+
+.tasks
+
+  .all
+    .desc Runs all tasks
+    .task fmt
+    .task clean
+    .task build
+    .task clippy
+    .task pedantic
+    .task test
+    .task doc
+    .task cov
+
+  .build
+    .desc Builds task commander in debug mode
+    .cmd cargo {{RUST_TOOLCHAIN}} build
+
+  .clean
+    .desc Cleans all generated artifacts
+    .cmd cargo {{RUST_TOOLCHAIN}} clean
+    .cmd rm -rf manual/book
+
+  .clippy
+    .desc Runs linter
+    .cmd cargo {{RUST_TOOLCHAIN}} clippy --all-targets
+
+  .cov
+    .desc Generates code coverage report in text format
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov clean
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov --no-cfg-coverage
+
+  .cov-html
+    .desc Generates code coverage report in HTML format
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov clean
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov --no-cfg-coverage --html
+
+  .cov-html-open
+    .desc Generates code coverage report in HTML format and opens in browser
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov clean
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov --no-cfg-coverage --html --open
+
+  .cov-badge
+    .desc Generates code coverage badge
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov clean
+    .cmd cargo {{RUST_TOOLCHAIN}} llvm-cov --no-cfg-coverage --json --summary-only | coverio -l coverage -c --tag cov-badge
+
+  .doc
+    .desc Generates documentation
+    .cmd cargo {{RUST_TOOLCHAIN}} doc --no-deps
+
+  .doc-open
+    .desc Generates documentation and opens in browser
+    .cmd cargo {{RUST_TOOLCHAIN}} doc --no-deps --open
+
+  .doc-private
+    .desc Generates private documentation
+    .cmd cargo {{RUST_TOOLCHAIN}} doc --no-deps --document-private-items
+
+  .doc-private-open
+    .desc Generates private documentation and opens in browser
+    .cmd cargo {{RUST_TOOLCHAIN}} doc --no-deps --document-private-items --open
+
+  .fmt
+    .desc Runs code formatter
+    .cmd cargo +nightly fmt
+
+  .install
+    .desc Installs task commander from local sources
+    .cmd cargo {{RUST_TOOLCHAIN}} install task-commander --path . --force
+
+  .manual
+    .desc Builds the manual from its markdown files
+    .cmd cd manual && mdbook build
+
+  .pedantic
+    .desc Runs pedantic linter
+    .cmd cargo {{RUST_TOOLCHAIN}} clippy --all-targets -- -D warnings -W clippy::pedantic -W clippy::nursery
+
+  .readme
+    .desc Recreates README file
+          Updates the README file taken from the documentation
+          and then recalculates and updates code coverage stats.
+    .cmd magg readme
+    .task cov-badge
+
+  .serve
+    .desc Serves manual locally
+    .cmd mdbook serve
+      .dir manual
+
+  .test
+    .desc Runs tests in debug mode
+    .cmd cargo {{RUST_TOOLCHAIN}} test
+
+  .testn
+    .desc Runs tests in debug mode using nextest
+    .cmd cargo {{RUST_TOOLCHAIN}} nextest run
+
+  .uninstall
+    .desc Uninstalls previously installed task commander
+    .cmd cargo {{RUST_TOOLCHAIN}} uninstall task-commander

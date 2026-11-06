@@ -1,0 +1,62 @@
+name: build Manual
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release/*
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build manual
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install latest mdBook and mdbook-yapp
+        run: |
+          tag_mdbook=$(curl -sSL 'https://api.github.com/repos/rust-lang/mdbook/releases/latest'| jq -r '.tag_name')
+          url_mdbook="https://github.com/rust-lang/mdBook/releases/download/${tag_mdbook}/mdbook-${tag_mdbook}-x86_64-unknown-linux-gnu.tar.gz"
+          tag_mdbook_yapp=$(curl -sSL 'https://api.github.com/repos/EngosSoftware/mdbook-yapp/releases/latest' | jq -r '.tag_name')
+          url_mdbook_yapp="https://github.com/EngosSoftware/mdbook-yapp/releases/download/${tag_mdbook_yapp}/mdbook-yapp-${tag_mdbook_yapp}-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir mdbook
+          curl -sSL $url_mdbook | tar -xz --directory=./mdbook
+          curl -sSL $url_mdbook_yapp | tar -xz --directory=./mdbook
+          echo `pwd`/mdbook >> $GITHUB_PATH
+
+      - name: Build manual
+        run: cd manual && mdbook build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: manual/book
+
+  deploy:
+    name: Deploy manual
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

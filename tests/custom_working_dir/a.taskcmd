@@ -1,0 +1,9 @@
+.tasks
+
+  .run
+    .cmd basename "$(pwd)"
+      .dir ./../..
+
+  .invalid-dir
+    .cmd basename "$(pwd)"
+      .dir ./nonexisting

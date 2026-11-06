@@ -1,0 +1,28 @@
+{
+  "name": "taskcmd",
+  "version": "1.0.0",
+  "description": "Syntax highlighting rules for task definitions.",
+  "license": "MIT",
+  "contributes": {
+    "languages": [
+      {
+        "id": "taskcmd",
+        "aliases": [
+          "TaskCmd",
+          "TASKCMD"
+        ],
+        "extensions": [
+          ".taskcmd"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "taskcmd",
+        "scopeName": "source.taskcmd",
+        "path": "./syntaxes/taskcmd.tmLanguage.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+.tasks
+
+  .parent
+    .task child
+
+  .child
+    .cmd echo "Hello parent!"
