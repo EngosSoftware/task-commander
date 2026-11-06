@@ -35,11 +35,13 @@ const fn get_shell_command() -> &'static str {
 }
 
 #[cfg(target_os = "linux")]
+#[cfg(target_os = "macos")]
 fn get_shell_command() -> &'static str {
     "/bin/sh"
 }
 
 #[cfg(target_os = "windows")]
+#[cfg(target_os = "macos")]
 fn get_shell_command() -> &'static str {
     "cmd"
 }
