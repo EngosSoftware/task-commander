@@ -1,6 +1,6 @@
 [package]
 name = "task-commander"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "TaskCommander"
 documentation = "https://docs.rs/task-commander"
@@ -8,6 +8,7 @@ repository = "https://github.com/EngosSoftware/task-commander.git"
 keywords = ["task", "commander"]
 homepage = "https://engossoftware.github.io/task-commander/"
 categories = ["command-line-utilities"]
+rust-version = "1.88.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 include = [
