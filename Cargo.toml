@@ -1,6 +1,6 @@
 [package]
 name = "task-commander"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "TaskCommander"
 documentation = "https://docs.rs/task-commander"
@@ -28,3 +28,8 @@ petgraph = "0.8.3"
 
 [dev-dependencies]
 cli-assert = "0.1.13"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
