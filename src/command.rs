@@ -30,29 +30,32 @@ pub fn execute(arg: impl AsRef<OsStr>, dir: impl AsRef<Path>) -> Result<ExitStat
 
 /// Returns a shell command specific for the operating system.
 #[cfg(target_os = "macos")]
+#[must_use]
 const fn get_shell_command() -> &'static str {
     "/bin/zsh"
 }
 
 #[cfg(target_os = "linux")]
-#[cfg(target_os = "macos")]
+#[must_use]
 fn get_shell_command() -> &'static str {
     "/bin/sh"
 }
 
 #[cfg(target_os = "windows")]
-#[cfg(target_os = "macos")]
+#[must_use]
 fn get_shell_command() -> &'static str {
     "cmd"
 }
 
 /// Returns options required by a shell command.
 #[cfg(unix)]
+#[must_use]
 const fn get_shell_args() -> &'static [&'static str] {
     &["-c"]
 }
 
 #[cfg(target_os = "windows")]
+#[must_use]
 fn get_shell_args() -> &'static [&'static str] {
     &["/c"]
 }
