@@ -135,7 +135,7 @@ dependencies = [
 
 [[package]]
 name = "task-commander"
-version = "0.0.4-rc.0"
+version = "0.0.4-dev"
 dependencies = [
  "antex",
  "cli-assert",
