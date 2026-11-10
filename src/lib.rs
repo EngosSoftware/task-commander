@@ -1,4 +1,3 @@
-#![allow(clippy::doc_markdown)]
 #![doc = include_str!("../docs/lib.rs.md")]
 
 pub mod command;

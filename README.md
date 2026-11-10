@@ -16,7 +16,7 @@
 [license-badge]: https://img.shields.io/badge/license-MIT_OR_Apache--2.0-9370DB.svg
 [human-badge]: https://img.shields.io/badge/made_by-HUMAN-F5DEB3.svg
 
-# TaskCommander
+# Task Commander
 
 WORK IN PROGRESS
 
