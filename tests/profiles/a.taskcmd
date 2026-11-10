@@ -1,17 +1,17 @@
 .vars
-  .HELLO Hello
-  .WORLD world
+    .HELLO Hello
+    .WORLD world
 
 .profiles
-  .polish
-    .vars
-      .HELLO Witaj
-  .german
-    .vars
-      .HELLO Hallo
-      .WORLD Welt
+    .polish
+        .vars
+            .HELLO Witaj
+    .german
+        .vars
+            .HELLO Hallo
+            .WORLD Welt
 
 .tasks
 
-  .greeting
-    .cmd echo {{HELLO}} {{WORLD}}!
+    .greeting
+        .cmd echo {{HELLO}} {{WORLD}}!
