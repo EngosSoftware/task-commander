@@ -16,12 +16,23 @@ use antex::ColorMode;
 ///
 /// Returns [`TaskCommanderError`](errors::TaskCommanderError) when running the application fails.
 pub fn run() -> Result<()> {
+    let mut profile_name: Option<String> = None;
+    let mut task_name: Option<String> = None;
+    let mut args = std::env::args().skip(1);
+    if let Some(arg) = args.next() {
+        if arg == "-p" {
+            if let Some(name) = args.next() {
+                profile_name = Some(name);
+            }
+            task_name = args.next();
+        } else {
+            task_name = Some(arg);
+        }
+    }
     let definitions = load_definitions()?;
-    let tasks = Tasks::new(&definitions)?;
-    let args = std::env::args().skip(1).collect::<Vec<String>>();
-    if args.len() == 1 {
-        let task_name = &args[0];
-        let exit_status = tasks.execute(task_name)?;
+    let tasks = Tasks::new(&definitions, profile_name)?;
+    if let Some(task_name) = task_name {
+        let exit_status = tasks.execute(&task_name)?;
         std::process::exit(exit_status.code().unwrap_or(1));
     }
     tasks.list(ColorMode::default());

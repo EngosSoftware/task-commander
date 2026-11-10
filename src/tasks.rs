@@ -25,6 +25,12 @@ pub enum Action {
     ),
 }
 
+/// A profile.
+#[derive(Debug, Default)]
+pub struct Profile {
+    variables: HashMap<String, String>,
+}
+
 /// A task.
 #[derive(Debug, Default, Clone)]
 pub struct Task {
@@ -79,8 +85,9 @@ impl Task {
 /// A collection of tasks.
 #[derive(Debug)]
 pub struct Tasks {
-    tasks: BTreeMap<String, Task>,
+    items: BTreeMap<String, Task>,
     variables: HashMap<String, String>,
+    profiles: HashMap<String, Profile>,
 }
 
 impl Tasks {
@@ -93,28 +100,39 @@ impl Tasks {
     /// # Panics
     ///
     /// TODO: Get rid of panics
-    pub fn new(definitions: &str) -> Result<Self> {
+    pub fn new(definitions: &str, profile_name: Option<String>) -> Result<Self> {
         let mut tasks = Self::parse_definitions(definitions)?;
         let ordered_names = Self::sort_tasks_topologically(&tasks)?;
+        if let Some(name) = profile_name {
+            tasks.use_profile(&name);
+        }
         for name in &ordered_names {
             let mut commands = vec![];
-            let task = tasks.tasks.get(name).unwrap(); // TODO get rid of unwrap
+            let task = tasks.items.get(name).unwrap(); // TODO get rid of unwrap
             for action in &task.actions {
                 match action {
                     Action::Command(command, dir) => {
                         commands.push((interpolate(command, &tasks.variables), dir.clone()));
                     }
                     Action::Task(name) => {
-                        let subtask = tasks.tasks.get(name).unwrap(); // TODO get rid of unwrap
+                        let subtask = tasks.items.get(name).unwrap(); // TODO get rid of unwrap
                         commands.append(&mut subtask.commands.clone());
                     }
                 }
             }
-            let task = tasks.tasks.get_mut(name).unwrap(); // TODO get rid of unwrap
+            let task = tasks.items.get_mut(name).unwrap(); // TODO get rid of unwrap
             task.commands.clear();
             task.commands.append(&mut commands);
         }
         Ok(tasks)
+    }
+
+    pub fn use_profile(&mut self, profile_name: &str) {
+        if let Some(profile) = self.profiles.get(profile_name) {
+            for (name, value) in &profile.variables {
+                self.variables.insert(name.clone(), value.clone());
+            }
+        }
     }
 
     /// Executes all commands of the given task.
@@ -124,7 +142,7 @@ impl Tasks {
     /// Returns an error if there is no task with specified name.
     pub fn execute(&self, name: &str) -> Result<ExitStatus> {
         let mut exit_status = ExitStatus::default();
-        if let Some(task) = self.tasks.get(name) {
+        if let Some(task) = self.items.get(name) {
             for (command, dir) in &task.commands {
                 exit_status = execute(command, dir)?;
                 if !exit_status.success() {
@@ -139,7 +157,7 @@ impl Tasks {
 
     /// Displays a list of tasks.
     pub fn list(&self, cm: ColorMode) {
-        let width = self.tasks.keys().map(String::len).max().unwrap_or_default();
+        let width = self.items.keys().map(String::len).max().unwrap_or_default();
         println!(
             "{}",
             Text::new(cm)
@@ -148,7 +166,7 @@ impl Tasks {
                 .s("Available tasks")
                 .reset()
         );
-        for task in self.tasks.values() {
+        for task in self.items.values() {
             let name = task.get_name();
             if let Some(description) = task.get_description() {
                 print!(
@@ -164,15 +182,52 @@ impl Tasks {
     }
 
     /// Parses task definitions.
+    #[allow(clippy::too_many_lines)]
     fn parse_definitions(definitions: &str) -> Result<Self> {
         let mut tasks = Self {
-            tasks: BTreeMap::new(),
+            items: BTreeMap::new(),
             variables: HashMap::new(),
+            profiles: HashMap::new(),
         };
         let root_node = diml::parse(definitions).expect("failed to parse the task file");
         for top_level_node in root_node.children() {
             match top_level_node.name() {
                 "note" => {} // Global notes are treated as a comment.
+                "profiles" => {
+                    // Global profiles.
+                    for profile_node in top_level_node.children() {
+                        let profile_name = profile_node.name().to_string();
+                        let mut profile = Profile {
+                            variables: HashMap::default(),
+                        };
+                        for profile_child_node in profile_node.children() {
+                            match profile_child_node.name() {
+                                "note" => {} // Profile notes are treated as a comment.
+                                "vars" => {
+                                    // Profile variables.
+                                    for profile_variable_node in profile_child_node.children() {
+                                        for attribute_node in profile_variable_node.children() {
+                                            match attribute_node.name() {
+                                                "note" => {} // Profile variable notes are treated as a comment.
+                                                other => {
+                                                    return Err(err_unexpected_node(
+                                                        other.to_string(),
+                                                    ));
+                                                }
+                                            }
+                                        }
+                                        profile.variables.insert(
+                                            profile_variable_node.name().to_string(),
+                                            profile_variable_node.content().trim().to_string(),
+                                        );
+                                    }
+                                }
+                                other => return Err(err_unexpected_node(other.to_string())),
+                            }
+                        }
+                        tasks.profiles.insert(profile_name, profile);
+                    }
+                }
                 "vars" => {
                     // Global variables.
                     for variable_node in top_level_node.children() {
@@ -192,7 +247,7 @@ impl Tasks {
                     // Task definitions.
                     for task_node in top_level_node.children() {
                         let task_name = task_node.name().to_string();
-                        if tasks.tasks.contains_key(&task_name) {
+                        if tasks.items.contains_key(&task_name) {
                             return Err(err_duplicated_task(task_name));
                         }
                         let mut task = Task::new(task_name.clone());
@@ -239,7 +294,7 @@ impl Tasks {
                                 other => return Err(err_unexpected_node(other.to_string())),
                             }
                         }
-                        tasks.tasks.insert(task_name.clone(), task);
+                        tasks.items.insert(task_name.clone(), task);
                     }
                 }
                 other => return Err(err_unexpected_node(other.to_string())),
@@ -284,7 +339,7 @@ impl Tasks {
     }
 
     fn iter(&self) -> std::collections::btree_map::Iter<'_, String, Task> {
-        self.tasks.iter()
+        self.items.iter()
     }
 }
 
