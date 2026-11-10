@@ -80,7 +80,8 @@
 
   .pedantic
     .desc Runs pedantic linter
-    .cmd cargo {{RUST_TOOLCHAIN}} clippy --all-targets -- -D warnings -W clippy::pedantic -W clippy::nursery
+    .cmd cargo {{RUST_TOOLCHAIN}} clippy --all-targets -- \
+         -D warnings -W clippy::pedantic -W clippy::nursery
 
   .readme
     .desc Recreates README file
