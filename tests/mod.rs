@@ -10,6 +10,7 @@ mod list_tasks;
 mod no_definitions_file;
 mod non_existing_command;
 mod notes;
+mod profiles;
 mod sorted_definitions_files;
 mod subtasks;
 mod undefined_task;
