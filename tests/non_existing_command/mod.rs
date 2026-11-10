@@ -17,8 +17,7 @@ fn _0001() {
 fn _0002() {
     #[cfg(target_os = "linux")]
     cli_assert::command!()
-        .arg("LANG=C")
-        .arg("run")
+        .arg("LANG=C run")
         .failure()
         .code(127)
         .stdout("")
