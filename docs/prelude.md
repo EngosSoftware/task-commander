@@ -1,3 +1,3 @@
-# Task Commander
+# TaskCommander
 
 WORK IN PROGRESS
