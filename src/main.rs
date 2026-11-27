@@ -1,17 +1,15 @@
 use antex::{ColorMode, StyledText, Text};
-use task_commander::run;
+use std::process::exit;
 
 fn main() {
     let cm = ColorMode::default();
-    match run() {
-        Ok(()) => {}
+    let code = match task_commander::run() {
+        Ok(code) => code,
         Err(err) => {
-            eprintln!(
-                "{}: {}",
-                Text::new(cm).red().bold().s("error").reset(),
-                err.as_text(cm)
-            );
-            std::process::exit(1);
+            let error_label = Text::new(cm).red().bold().s("error:").r(' ');
+            eprintln!("{error_label}{}", err.as_text(cm));
+            1
         }
-    }
+    };
+    exit(code);
 }

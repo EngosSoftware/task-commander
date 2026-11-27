@@ -23,6 +23,7 @@ include = [
 
 [dependencies]
 antex = "0.2.6"
+clars = "0.5.0"
 diml = "0.2.1"
 petgraph = "0.8.3"
 # indexmap lowered because of petgraph - remove when petgraph upgrades

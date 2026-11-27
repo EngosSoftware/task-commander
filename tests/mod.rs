@@ -1,10 +1,13 @@
 mod always_failing_command;
+mod cli;
 mod custom_working_dir;
 mod dependency_cycle;
 mod duplicated_command_dir;
 mod duplicated_tasks;
 mod global_variables;
 mod hello_world;
+mod invalid_profiles_1;
+mod invalid_profiles_2;
 mod invalid_subtask;
 mod list_tasks;
 mod no_definitions_file;
