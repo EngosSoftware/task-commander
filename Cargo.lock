@@ -9,6 +9,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75e1f0fdb887148f0a7dc46f809de8f567dcdacabe2d553c5a624aed82dc5d68"
 
 [[package]]
+name = "clars"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6d8378426b12e11b1e106285b67c7e2ebb87874283fc84aa8312f5d747daad8"
+dependencies = [
+ "antex",
+]
+
+[[package]]
 name = "cli-assert"
 version = "0.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -132,6 +141,7 @@ name = "task-commander"
 version = "0.1.0"
 dependencies = [
  "antex",
+ "clars",
  "cli-assert",
  "diml",
  "indexmap",

@@ -1,0 +1,22 @@
+.vars
+    .HELLO Hello
+    .WORLD world
+
+.profile polish
+    .note Partial Polish version
+    .vars
+        .note Only first word is in Polish
+        .HELLO Witaj
+
+.profile german
+    .note Full German version
+    .vars
+        .HELLO Hallo
+            .note Means Hello
+        .WORLD Welt
+            .note Means World
+    .desc Description is not allowed in profile
+
+.tasks
+    .greeting
+        .cmd echo {{HELLO}} {{WORLD}}!

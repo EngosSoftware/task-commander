@@ -18,6 +18,18 @@ fn _0001() {
 #[test]
 fn _0002() {
     cli_assert::command!()
+        .arg("--profile=non-existing")
+        .arg("greeting")
+        .success()
+        .code(0)
+        .stdout(format!("Hello world!{NL}"))
+        .stderr("")
+        .execute();
+}
+
+#[test]
+fn _0003() {
+    cli_assert::command!()
         .arg("-p")
         .arg("polish")
         .arg("greeting")
@@ -29,7 +41,7 @@ fn _0002() {
 }
 
 #[test]
-fn _0003() {
+fn _0004() {
     cli_assert::command!()
         .arg("-p")
         .arg("german")
