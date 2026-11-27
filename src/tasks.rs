@@ -193,40 +193,36 @@ impl Tasks {
         for top_level_node in root_node.children() {
             match top_level_node.name() {
                 "note" => {} // Global notes are treated as a comment.
-                "profiles" => {
-                    // Global profiles.
-                    for profile_node in top_level_node.children() {
-                        let profile_name = profile_node.name().to_string();
-                        let mut profile = Profile {
-                            variables: HashMap::default(),
-                        };
-                        for profile_child_node in profile_node.children() {
-                            match profile_child_node.name() {
-                                "note" => {} // Profile notes are treated as a comment.
-                                "vars" => {
-                                    // Profile variables.
-                                    for profile_variable_node in profile_child_node.children() {
-                                        for attribute_node in profile_variable_node.children() {
-                                            match attribute_node.name() {
-                                                "note" => {} // Profile variable notes are treated as a comment.
-                                                other => {
-                                                    return Err(err_unexpected_node(
-                                                        other.to_string(),
-                                                    ));
-                                                }
+                "profile" => {
+                    // Global profile.
+                    let profile_name = top_level_node.value().to_string();
+                    let mut profile = Profile {
+                        variables: HashMap::default(),
+                    };
+                    for profile_child_node in top_level_node.children() {
+                        match profile_child_node.name() {
+                            "note" => {} // Profile notes are treated as a comment.
+                            "vars" => {
+                                // Profile variables.
+                                for profile_variable_node in profile_child_node.children() {
+                                    for attribute_node in profile_variable_node.children() {
+                                        match attribute_node.name() {
+                                            "note" => {} // Profile variable notes are treated as a comment.
+                                            other => {
+                                                return Err(err_unexpected_node(other.to_string()));
                                             }
                                         }
-                                        profile.variables.insert(
-                                            profile_variable_node.name().to_string(),
-                                            profile_variable_node.content().trim().to_string(),
-                                        );
                                     }
+                                    profile.variables.insert(
+                                        profile_variable_node.name().to_string(),
+                                        profile_variable_node.value().to_string(),
+                                    );
                                 }
-                                other => return Err(err_unexpected_node(other.to_string())),
                             }
+                            other => return Err(err_unexpected_node(other.to_string())),
                         }
-                        tasks.profiles.insert(profile_name, profile);
                     }
+                    tasks.profiles.insert(profile_name, profile);
                 }
                 "vars" => {
                     // Global variables.
@@ -239,7 +235,7 @@ impl Tasks {
                         }
                         tasks.variables.insert(
                             variable_node.name().to_string(),
-                            variable_node.content().trim().to_string(),
+                            variable_node.value().to_string(),
                         );
                     }
                 }
@@ -255,15 +251,13 @@ impl Tasks {
                             match task_attribute_node.name() {
                                 "note" => {} // Task notes are treated as a comment.
                                 "desc" => {
-                                    task.set_description(
-                                        task_attribute_node.content().trim().to_string(),
-                                    );
+                                    task.set_description(task_attribute_node.value().to_string());
                                 }
                                 "task" => {
-                                    task.add_task(task_attribute_node.content().trim().to_string());
+                                    task.add_task(task_attribute_node.value().to_string());
                                 }
                                 "cmd" => {
-                                    let command_text = task_attribute_node.content().trim();
+                                    let command_text = task_attribute_node.value();
                                     let mut dir = None;
                                     for command_attribute_node in task_attribute_node.children() {
                                         match command_attribute_node.name() {
@@ -275,10 +269,7 @@ impl Tasks {
                                             }
                                             "dir" => {
                                                 dir = Some(
-                                                    command_attribute_node
-                                                        .content()
-                                                        .trim()
-                                                        .to_string(),
+                                                    command_attribute_node.value().to_string(),
                                                 );
                                             }
                                             other => {
