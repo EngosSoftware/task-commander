@@ -25,8 +25,6 @@ For more information, try '-h' or '--help'
 #[test]
 fn _0002() {
     let expected_stdout = "task-commander v0.1.0\n";
-    #[cfg(target_os = "windows")]
-    let expected_stdout = win(expected_stdout);
     cli_assert::command!()
         .arg("-V")
         .success()
