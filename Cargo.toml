@@ -1,6 +1,6 @@
 [package]
 name = "task-commander"
-version = "0.0.4-dev"
+version = "0.1.0"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "TaskCommander"
 documentation = "https://docs.rs/task-commander"
@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 include = [
     "src/**",
     "tests/**",
-    "docs/*.rs.md",
+    "docs/**/*.rs.md",
     "Cargo.lock",
     "Cargo.toml",
     "LICENSE*",
@@ -22,9 +22,11 @@ include = [
 ]
 
 [dependencies]
-antex = "0.2.3"
-diml = "0.2.0"
+antex = "0.2.6"
+diml = "0.2.1"
 petgraph = "0.8.3"
+# indexmap lowered because of petgraph - remove when petgraph upgrades
+indexmap = "=2.6.0"
 
 [dev-dependencies]
 cli-assert = "0.1.13"
@@ -32,4 +34,5 @@ cli-assert = "0.1.13"
 [profile.release]
 lto = true
 codegen-units = 1
+panic = "abort"
 strip = true
