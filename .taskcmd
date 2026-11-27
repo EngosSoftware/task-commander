@@ -5,6 +5,10 @@
 .vars
   .RUST_TOOLCHAIN +1.88.0
 
+.profile newest
+  .vars
+    .RUST_TOOLCHAIN +stable
+
 .tasks
 
   .all
@@ -17,6 +21,7 @@
     .task test
     .task doc
     .task cov
+    .task version
 
   .build
     .desc Builds task commander in debug mode
@@ -106,3 +111,7 @@
   .uninstall
     .desc Uninstalls previously installed task commander
     .cmd cargo {{RUST_TOOLCHAIN}} uninstall task-commander
+
+  .version
+    .desc Displays currently used toolchain's version
+    .cmd cargo {{RUST_TOOLCHAIN}} --version
